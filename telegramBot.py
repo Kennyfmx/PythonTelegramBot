@@ -126,3 +126,27 @@ def generate_answer(replica):
 def get_stub():
     failure_phrases = BOT_CONFIG['failure_phrases']
     return random.choice(failure_phrases)
+
+stats = {'intent': 0, 'generative': 0, 'stubs': 0}
+
+def bot(replica):
+    # NLU
+    intent = classify_intent(replica)
+    
+    # generate answer
+    
+    # rules
+    if intent:
+        answer = get_answer_by_intent(intent)
+        if answer:
+            stats['intent'] += 1
+            return answer
+    # bot generative model
+    answer = generate_answer(replica)
+    if answer:
+        stats['generative'] += 1
+        return answer
+    # stub
+    answer = get_stub()
+    stats['stubs'] += 1
+    return answer
